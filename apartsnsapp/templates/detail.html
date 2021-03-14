@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="alert alert-primary text-center " role="alert"><h5>{{object.title}}</h5></div>
+<div class=container>
+    <div class="alert alert-success" role="alert">
+        <P>タイトル：{{object.title}}</P>
+        <p>投稿者：{{object.author}}</p>
+        <p>内容：{{object.content}}</p>
+        <p><img src='{{object.image.url}}' width=300></p>
+        <a href="{% url 'good' object.pk %}" class="btn btn-primary" role="button" aria-pressed="true">回答</a>
+    </div>
+</div>
+{% endblock content %}

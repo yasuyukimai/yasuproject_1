@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="alert alert-primary text-center " role="alert"><h5>トップ画面</h5></div>
+{% for item in object_list %}
+<div class="card border-primary mb-3" style="max-width: 100% ;">
+    <div class="card-header"><P><h5><a href="{% url 'detail' item.pk %}">{{item.title}}</h5></a></P></div>
+    <div class="card-body">
+        <p class="card-text">本文：{{item.content}}</p>
+        <a href="{% url 'detail' item.pk %}" class="btn btn-secondary btn-sm" role="button" aria-pressed="true">コメントする：{{item.good}}</a>
+    </div>
+</div>
+{% endfor %}
+<div class="card border-light mb-3" style="max-width: 18rem ;"> <a href="{% url 'create' %}"><P>投稿する</P></a></div>
+<a href="{% url 'logout' %}">ログアウト</a>
+{% endblock content %}ß

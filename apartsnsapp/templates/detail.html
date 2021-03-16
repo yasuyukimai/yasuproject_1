@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="alert alert-primary text-center " role="alert"><h5>{{object.title}}</h5></div>
+
+<!--
+    {% block content %}
+<div class="alert alert-primary text-center " role="alert">
+    <h5>{{object.title}}</h5>
+</div>
 <div class=container>
     <div class="alert alert-success" role="alert">
         <P>タイトル：{{object.title}}</P>
@@ -11,4 +15,19 @@
         <a href="{% url 'good' object.pk %}" class="btn btn-primary" role="button" aria-pressed="true">回答</a>
     </div>
 </div>
+{% endblock content %}
+-->
+
+{% block content %}
+<div class="alert alert-primary text-center " role="alert"><h5>{{object.title}}</h5></div>
+<div class="card border-primary mb-3" style="max-width: 100% ;">
+    <div class="card-header"><P><h5><a href=>{{object.title}}</h5></a></P></div>
+    <div class="card-body">
+        <p class="card-text">本文：{{object.content}}</p>
+    </div>
+</div>
+<div class="card border-light mb-3" style="max-width: 18rem ;"> 
+    <a href="{% url 'create' %}"><P>投稿する</P></a>
+</div>
+<a href="{% url 'logout' %}">ログアウト</a>
 {% endblock content %}

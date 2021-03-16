@@ -36,10 +36,12 @@ def loginfunc(request):
             return redirect('login')
     return render(request, 'login.html')
 
+'''
 @login_required
 def listfunc(request):
     object_list = ApartsnsModel.objects.all()
     return render(request, 'list.html' , {'object_list':object_list})
+'''
 
 # はも追記
 # LoginRequiredMixinというクラスを継承していますが、これを書いておくだけで未ログインの場合、ログイン必須になります。
@@ -52,11 +54,12 @@ class ListView(LoginRequiredMixin, ListView):
 def logoutfunc(request):
     logout(request)
     return redirect('login')
-
+'''
 @login_required
 def detailfunc(request , pk):
     object = ApartsnsModel.objects.get(pk=pk)
     return render(request , 'detail.html',{'object':object})
+'''
 
 # はも追記
 # DetailViewを継承することで、detailfuncのようにpkを持ってくる必要がなくなります。

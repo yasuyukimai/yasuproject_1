@@ -11,6 +11,9 @@
     </div>
 </div>
 {% endfor %}
-<div class="card border-light mb-3" style="max-width: 18rem ;"> <a href="{% url 'create' %}"><P>投稿する</P></a></div>
+<div class="card border-light mb-3" style="max-width: 18rem ;"> 
+    <a href="{% url 'create' %}"><P>投稿する</P></a>
+</div>
+
 <a href="{% url 'logout' %}">ログアウト</a>
 {% endblock content %}ß

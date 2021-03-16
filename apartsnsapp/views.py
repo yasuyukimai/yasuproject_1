@@ -31,7 +31,7 @@ def loginfunc(request):
         user = authenticate(request, username=username2, password=password2)
         if user is not None:
             login(request, user)
-            return redirect('list')
+            return redirect('list', aparts=username2)
         else:
             return redirect('login')
     return render(request, 'login.html')
@@ -50,6 +50,10 @@ class ListView(LoginRequiredMixin, ListView):
     model = ApartsnsModel # モデル名を指定します。ApartsnsModel.objects.all()と同義です
     context_object_name = 'object_list' # htmlファイル側でModelObjects(ApartsnsModel.objects.all())をどういう名称で使うかを指定します。デフォルトがobject_listなので定義しなくてもOKです。listfuncの {'object_list':object_list})と同義です。
 
+    def get(self, request, *args, **kwargs):
+        if self.request.user.username == self.kwargs['aparts']:
+            return super().get(request, **kwargs)
+        return render(self.request, '404.html')
 
 def logoutfunc(request):
     logout(request)

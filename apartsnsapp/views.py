@@ -1,34 +1,19 @@
 # Create your views here.
-from django.shortcuts import render ,redirect
+from django.shortcuts import render ,redirect , get_object_or_404
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout
-from .models import ApartsnsModel
+from .models import ApartsnsModel , CommentModel
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
-
-# はも追記
+from django.views.generic import CreateView, ListView, DetailView,DeleteView,UpdateView
+from .forms import CommentCreateForm ,PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import PostForm
-
-
-def signupfunc(request):
-    if request.method == 'POST':
-        username2 = request.POST['username']
-        password2 = request.POST['password']
-        try:
-            User.objects.get(username=username2)
-            return render(request , 'signup.html' , {'error':'このユーザーは登録されています'})
-        except:
-            user = User.objects.create_user(username2, '', password2)
-            return render(request ,'signup.html' ,{'some' : 100} )
-    return render(request ,'signup.html' ,{'some' : 100})
 
 def loginfunc(request):
     if request.method == 'POST':
-        username2 = request.POST['username']
-        password2 = request.POST['password']
-        user = authenticate(request, username=username2, password=password2)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request,username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('list')
@@ -36,65 +21,43 @@ def loginfunc(request):
             return redirect('login')
     return render(request, 'login.html')
 
-'''
-@login_required
-def listfunc(request):
-    object_list = ApartsnsModel.objects.all()
-    return render(request, 'list.html' , {'object_list':object_list})
-'''
-
-# はも追記
-# LoginRequiredMixinというクラスを継承していますが、これを書いておくだけで未ログインの場合、ログイン必須になります。
-class ListView(LoginRequiredMixin, ListView):
-    template_name = 'list.html' # htmlファイルを指定します。
-    model = ApartsnsModel # モデル名を指定します。ApartsnsModel.objects.all()と同義です
-    context_object_name = 'object_list' # htmlファイル側でModelObjects(ApartsnsModel.objects.all())をどういう名称で使うかを指定します。デフォルトがobject_listなので定義しなくてもOKです。listfuncの {'object_list':object_list})と同義です。
-
-
 def logoutfunc(request):
     logout(request)
     return redirect('login')
-'''
-@login_required
-def detailfunc(request , pk):
-    object = ApartsnsModel.objects.get(pk=pk)
-    return render(request , 'detail.html',{'object':object})
-'''
 
-# はも追記
-# DetailViewを継承することで、detailfuncのようにpkを持ってくる必要がなくなります。
+class ListView(LoginRequiredMixin, ListView):
+    template_name = 'list.html' 
+    model = ApartsnsModel 
+    context_object_name = 'object_list' 
+
 class DetailView(LoginRequiredMixin, DetailView):
     template_name = 'detail.html'
     model = ApartsnsModel  
 
-
-def goodfunc(request, pk):
-    post = ApartsnsModel.objects.get(pk=pk)
-    post.good = post.good + 1
-    post.save()
-    return redirect('list')
-
-def readfunc(request, pk):
-    post = ApartsnsModel.objects.get(pk=pk)
-    post2 = request.user.get_username()
-    if post2 in post.readtext:
-        return redirect('list')
-    else:
-        post.read += 1
-        post.readtext = post.readtext + '' + post2
-        post.save()
-        return redirect('list')
-
-# class ApartsnsCreate(CreateView):
-#     template_name = 'create.html'
-#     model = ApartsnsModel
-#     fields = ('title' , 'content' , 'author' , 'images')
-#     success_url = reverse_lazy('list')
-
-# はも追記
-class ApartsnsCreate(LoginRequiredMixin, CreateView):
+class ApartCreate(LoginRequiredMixin, CreateView):
     template_name = 'create.html'
     model = ApartsnsModel
-    form_class = PostForm # fieldsの内容はforms.pyというファイルを用意して記述するようにしましょう。forms.pyに記述することでフォームの内容に関してできる幅が広がります。
+    form_class = PostForm
     success_url = reverse_lazy('list')
 
+class ApartDelete(DeleteView):
+    template_name = 'delete.html'
+    model = ApartsnsModel
+    success_url = reverse_lazy('list')
+
+class ApartUpdate(UpdateView):
+    template_name = 'update.html'
+    model = ApartsnsModel
+    fields = ('name', 'title','content')
+    success_url = reverse_lazy('list')
+
+class CommentView(LoginRequiredMixin, CreateView):
+    template_name = 'commentmodel_form.html'
+    model = CommentModel
+    form_class = CommentCreateForm
+    def form_valid(self, form):
+        post_pk = self.kwargs['post_pk']
+        comment = form.save(commit=False) 
+        comment.post = get_object_or_404(ApartsnsModel, pk=post_pk)
+        comment.save() 
+        return redirect('detail', pk=post_pk)

@@ -1,22 +1,6 @@
 {% extends 'base.html' %}
+{% block customcss %}{% endblock customcss %}
 
-
-<!--
-    {% block content %}
-<div class="alert alert-primary text-center " role="alert">
-    <h5>{{object.title}}</h5>
-</div>
-<div class=container>
-    <div class="alert alert-success" role="alert">
-        <P>タイトル：{{object.title}}</P>
-        <p>投稿者：{{object.author}}</p>
-        <p>内容：{{object.content}}</p>
-        <p><img src='{{object.image.url}}' width=300></p>
-        <a href="{% url 'good' object.pk %}" class="btn btn-primary" role="button" aria-pressed="true">回答</a>
-    </div>
-</div>
-{% endblock content %}
--->
 
 {% block content %}
 <div class="alert alert-primary text-center " role="alert"><h5>{{object.title}}</h5></div>
@@ -26,8 +10,18 @@
         <p class="card-text">本文：{{object.content}}</p>
     </div>
 </div>
-<div class="card border-light mb-3" style="max-width: 18rem ;"> 
-    <a href="{% url 'create' %}"><P>投稿する</P></a>
+<a class="btn btn-primary mb-3" href="{% url 'comment' object.id %}">コメントする</a><br>
+
+<h5>---コメント一覧---</h5>
+
+{% for comment in object.commentmodel_set.all %}
+<div class="card border-primary mb-3" style="max-width: 100% ;">
+    <div class="card-header">
+        <P><a>投稿者：{{ comment.name }}</a></P>
+    </div>
+    <div class="card-body">
+        <p class="card-text">本文：{{ comment.text | linebreaksbr }}</p>
+    </div>
 </div>
-<a href="{% url 'logout' %}">ログアウト</a>
+{% endfor %}
 {% endblock content %}

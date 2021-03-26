@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
+{% block customcss %}{% endblock customcss %}
 
 {% block content %}
 <div class="alert alert-primary text-center " role="alert"><h5>投稿画面</h5></div>
 {% if user.is_authenticated %}
 <form action='' method='POST' enctype="multipart/form-data">{% csrf_token %}
 
+<div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label"><h5>投稿者</h5></label>
+    <input type="name" class="form-control" name='name' placeholder="投稿者">
+    {% for error in form.title.errors %}
+    <p class="text-danger">{{ error }}</p>
+    {% endfor %}
+</div>
 <div class="mb-3">
     <label for="exampleFormControlInput1" class="form-label"><h5>タイトル</h5></label>
     <input type="text" class="form-control" name='title'  placeholder="タイトル">
@@ -20,26 +28,14 @@
     {% endfor %}
 </div>
 
-
-<div class="mb-3">
-    <label for="formFile" class="form-label"><h5>画像（任意）：</h5></label>
-    <input type='file' name='images'>
-</div>
-{% for error in form.images.errors %}
-<p class="text-danger">{{ error }}</p>
-{% endfor %}
-
 <div class="col-auto">
     <p><input type='hidden' name='author' value="{{ user.username }}"></p>
     <p><input type='submit' value='投稿する'></p>
 </div>
 
 </form>
-
-
 {% else %}
 <div class="alert alert-primary" role="alert">ログインしてください</div>
-
 {% endif %}
 {% endblock content %}
 

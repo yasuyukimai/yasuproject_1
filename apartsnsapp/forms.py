@@ -3,6 +3,8 @@ from .models import ApartsnsModel , CommentModel
 
 class PostForm(forms.ModelForm):
     title = forms.CharField(max_length=50, error_messages={'required': '入力してください'})
+    name = forms.CharField(max_length=50, error_messages={'required': '入力してください'})
+    content = forms.CharField(max_length=50, error_messages={'required': '入力してください'})
     class Meta:
         model = ApartsnsModel
         fields = ('name','title' , 'content')

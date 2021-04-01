@@ -8,7 +8,7 @@
 
 <div class="mb-3">
     <label for="exampleFormControlInput1" class="form-label"><h5>投稿者</h5></label>
-    <input type="name" class="form-control" name='name' placeholder="投稿者">
+    <input type="name" class="form-control" name='name' placeholder="投稿者" , default = '匿名'>
     {% for error in form.title.errors %}
     <p class="text-danger">{{ error }}</p>
     {% endfor %}

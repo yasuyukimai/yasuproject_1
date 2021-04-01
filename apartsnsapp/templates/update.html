@@ -2,10 +2,9 @@
 
 {% block content %}
 <form action='' method='POST'>{% csrf_token %}
-    {{ form.title }}
-    {{ form.memo }}
-    {{ form.priority }}
-    {{ form.duedate }}
+    {{ form.title }}<br>
+    {{ form.name }}<br>
+    {{ form.content }}<br>
     <input type="submit" value='更新する'>
 </form>
 {% endblock content %}
